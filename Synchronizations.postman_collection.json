@@ -1,0 +1,140 @@
+{
+	"info": {
+		"_postman_id": "3f9807be-e85d-4823-9ee6-01afe36a8581",
+		"name": "Synchronizations",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "synchronize-pricings",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/*let jsonResponseData = pm.response.json()\r",
+							"let lastSyncStatus = jsonResponseData.lastSync.success\r",
+							"let lastSyncSuccessStatus = jsonResponseData.lastSyncSuccess.success\r",
+							"\r",
+							"pm.test(\"Synchronize Pricing is Successful\", ()=> {\r",
+							"    //pm.response.status.to.eql(200)\r",
+							"    pm.expect(lastSyncStatus).to.eql(true)\r",
+							"    pm.expect(lastSyncSuccessStatus).to.eql(true)\r",
+							"    pm.response.to.have.status(200);\r",
+							"//Success Message Validation\r",
+							"pm.expect(jsonResponseData).have.property(\"message\");\r",
+							"pm.expect(jsonResponseData.message).to.contains(\"Success\");\r",
+							"// Last Sync Validation\r",
+							"pm.expect(lastSyncStatus).have.property(\"message\");\r",
+							"pm.expect(lastSyncSuccessStatus).to.eql(\"true\");\r",
+							"// Last Sync Success Validation\r",
+							"pm.expect(jsonResponseData.lastSyncSuccess).have.property(\"message\");\r",
+							"pm.expect(jsonResponseData.lastSyncSuccess.success).to.eql(\"true\");\r",
+							"})\r",
+							"*/\r",
+							"\r",
+							"pm.test(\"Synchronize Pricing is Successful\", ()=> {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_uri}}/pre/synchronize-pricings",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"pre",
+						"synchronize-pricings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "synchronizations",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json()\r",
+							"let baseURI = pm.environment.get (\"base_uri\")\r",
+							"//console.log(baseURI)\r",
+							"//console.log(response)\r",
+							"let responseMessage = response.results[0].message\r",
+							"let responseSuccessStatus = response.results[0].success\r",
+							"//console.log(4)\r",
+							"console.log(responseMessage)\r",
+							"\r",
+							"    //console.log(2) responseMessage == \"fail\" || \r",
+							"if (responseMessage == \"In progress\")\r",
+							"{\r",
+							"    //console.log(\"failed\")\r",
+							"    setTimeout(()=>{\r",
+							"        \r",
+							"        pm.test(\"Request retry\" , ()=>{\r",
+							"        postman.setNextRequest(pm.info.requestId);\r",
+							"    }) \r",
+							"        }, 5000);\r",
+							"\r",
+							"}\r",
+							"else if (responseMessage == \"fail\")\r",
+							"{\r",
+							"    pm.test(\"Sync Failed\", ()=>{\r",
+							"        pm.expect.fail(\"This Test is Failed in the Sync\")\r",
+							"        })\r",
+							"}\r",
+							"else {\r",
+							"pm.test(\"Sync Passed Successfully\", ()=>{\r",
+							"//let responseMessage = response.results[0].message\r",
+							"//let responseSuccessStatus = response.results[0].success\r",
+							"pm.expect(responseMessage).to.eql(\"done\")\r",
+							"pm.expect(responseSuccessStatus).to.eql(true)\r",
+							"pm.response.to.have.status(200)\r",
+							"//console.log(1)\r",
+							" \r",
+							"})\r",
+							"}\r",
+							"\r",
+							"// responseSuccessStatus -- remove from if condition -- (|| responseSuccessStatus == false)\r",
+							"// poll for 5secs -- In progress\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_uri}}/pre/synchronizations",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"pre",
+						"synchronizations"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
